@@ -118,3 +118,14 @@ h6::before {
   -webkit-animation: ccc 6s linear infinite;
   animation: ccc 6s linear infinite;
 }
+
+/* 隐藏侧边栏 Recent Posts 缩略图 */
+.card-widget.card-recent-post .aside-list-item .thumbnail {
+  display: none !important;
+}
+
+/* 让侧边栏文字区域占满宽度 */
+.card-widget.card-recent-post .aside-list-item .content {
+  padding-left: 0 !important;
+  width: 100% !important;
+}
