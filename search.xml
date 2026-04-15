@@ -4,6 +4,19 @@
   
     
     <entry>
+      <title>Git usage</title>
+      <link href="/2026/04/14/git/"/>
+      <url>/2026/04/14/git/</url>
+      
+        <content type="html"><![CDATA[<h2 id="高频命令"><a href="#高频命令" class="headerlink" title="高频命令"></a>高频命令</h2><ul><li><p><code>git status</code>：查看当前改了哪些文件，最常用</p></li><li><p><code>git log --oneline --graph --decorate</code>：简洁查看提交历史</p></li><li><p><code>git diff</code>：看还没 <code>add</code> 的改动</p></li><li><p><code>git diff --cached</code>：看已经 <code>add</code> 但还没 <code>commit</code> 的改动</p></li><li><p><code>git branch</code>：查看本地分支</p></li><li><p><code>git clone &lt;仓库地址&gt;</code>：把远程仓库拉到本地</p></li><li><p><code>git add &lt;文件&gt;</code>：把文件加入暂存区</p></li><li><p><code>git add .</code>：把当前目录下修改过的文件都加入暂存区</p></li><li><p><code>git commit -m &quot;说明&quot;</code>：提交一次修改</p></li><li><p><code>git switch &lt;分支名&gt;</code>：切换分支</p></li><li><p><code>git switch -c &lt;新分支名&gt;</code>：创建并切换到新分支</p></li><li><p><code>git pull</code>：拉取远程最新代码</p></li><li><p><code>git push</code>：把本地提交推到远程</p></li><li><p><code>git fetch</code>：只获取远程更新，不自动合并</p></li></ul><h2 id="切换分支"><a href="#切换分支" class="headerlink" title="切换分支"></a>切换分支</h2><ul><li>基于当前分支新建并切换：<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git switch -c feature/user-login</span><br></pre></td></tr></table></figure></li><li>老写法：<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git checkout -b feature/user-login</span><br></pre></td></tr></table></figure></li><li>推送到远程并建立追踪：<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git push -u origin feature/user-login</span><br></pre></td></tr></table></figure></li></ul><h2 id="合并分支"><a href="#合并分支" class="headerlink" title="合并分支"></a>合并分支</h2><ul><li>先切到目标分支：<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git switch develop</span><br></pre></td></tr></table></figure></li><li>合并功能分支：<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git merge feature/user-login</span><br></pre></td></tr></table></figure></li></ul><h2 id="解决冲突"><a href="#解决冲突" class="headerlink" title="解决冲突"></a>解决冲突</h2><p>冲突后常见流程：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git status</span><br></pre></td></tr></table></figure><p>手动编辑冲突文件，删掉这些标记：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;&lt;&lt;&lt;&lt;&lt;&lt;</span><br><span class="line">=======</span><br><span class="line">&gt;&gt;&gt;&gt;&gt;&gt;&gt;</span><br></pre></td></tr></table></figure><p>然后：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git add .</span><br><span class="line">git commit -m <span class="string">&quot;fix: resolve merge conflict&quot;</span></span><br></pre></td></tr></table></figure><h2 id="撤销提交"><a href="#撤销提交" class="headerlink" title="撤销提交"></a>撤销提交</h2><p><strong>先在当前节点new branch ;再切换到master分支进行git reset</strong></p><ul><li><code>HEAD</code>：当前提交位置</li><li><code>暂存区</code>：<code>git add</code> 之后、<code>commit</code> 之前的区域</li><li><code>工作区</code>：你正在编辑的文件</li></ul><h3 id="1-soft"><a href="#1-soft" class="headerlink" title="1. --soft"></a>1. <code>--soft</code></h3><p>只移动 HEAD，不动暂存区和工作区(重新写<code>提交说明</code>)</p><p>删除-m “说明”</p><p>例子：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git commit -m <span class="string">&quot;wip&quot;</span></span><br></pre></td></tr></table></figure><p>发现<code>提交说明</code>太随便，想改成正式一点：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git reset --soft HEAD~1</span><br><span class="line">git commit -m <span class="string">&quot;feat: add login validation&quot;</span></span><br></pre></td></tr></table></figure><h3 id="2-mixed"><a href="#2-mixed" class="headerlink" title="2. --mixed"></a>2. <code>--mixed</code></h3><p>移动 HEAD，并重置暂存区，但不动工作区(重新选择<code>add文件</code>)</p><p>删除-m “说明”, add上去的文件</p><p>默认就是 <code>--mixed</code>。</p><p>例子：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git reset HEAD~1</span><br><span class="line">git status</span><br></pre></td></tr></table></figure><p>这时你会看到：</p><ul><li>改动还在</li><li>但变成未暂存状态了</li></ul><p>然后你可以重新选择：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">git add file1</span><br><span class="line">git commit -m <span class="string">&quot;feat: part 1&quot;</span></span><br><span class="line">git add file2</span><br><span class="line">git commit -m <span class="string">&quot;fix: part 2&quot;</span></span><br></pre></td></tr></table></figure><h3 id="3-hard"><a href="#3-hard" class="headerlink" title="3. --hard"></a>3. <code>--hard</code></h3><p>HEAD、暂存区、工作区一起重置</p><p>删除-m “说明”, add上去的文件, 本地的改动</p><p>例子：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git reset --hard HEAD~1</span><br></pre></td></tr></table></figure><h2 id="回滚某次提交"><a href="#回滚某次提交" class="headerlink" title="回滚某次提交"></a>回滚某次提交</h2><ul><li>安全回滚某次提交：<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git revert 提交ID</span><br></pre></td></tr></table></figure>比如：<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git revert a1b2c3d</span><br></pre></td></tr></table></figure>这会新生成一次“反向提交”，适合线上&#x2F;团队协作。</li></ul><h2 id="查看是谁改了某一行"><a href="#查看是谁改了某一行" class="headerlink" title="查看是谁改了某一行"></a>查看是谁改了某一行</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git blame src/login.js</span><br></pre></td></tr></table></figure>]]></content>
+      
+      
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>Venv</title>
       <link href="/2025/07/09/venv/"/>
       <url>/2025/07/09/venv/</url>
@@ -98,17 +111,6 @@
     
     
     <entry>
-      <title>关于</title>
-      <link href="/about/index.html"/>
-      <url>/about/index.html</url>
-      
-        <content type="html"><![CDATA[]]></content>
-      
-    </entry>
-    
-    
-    
-    <entry>
       <title>分类</title>
       <link href="/categories/index.html"/>
       <url>/categories/index.html</url>
@@ -131,9 +133,9 @@
     
     
     <entry>
-      <title>link</title>
-      <link href="/link/index.html"/>
-      <url>/link/index.html</url>
+      <title>电影</title>
+      <link href="/movies/index.html"/>
+      <url>/movies/index.html</url>
       
         <content type="html"><![CDATA[]]></content>
       
@@ -142,9 +144,9 @@
     
     
     <entry>
-      <title>电影</title>
-      <link href="/movies/index.html"/>
-      <url>/movies/index.html</url>
+      <title>关于</title>
+      <link href="/about/index.html"/>
+      <url>/about/index.html</url>
       
         <content type="html"><![CDATA[]]></content>
       
@@ -164,9 +166,9 @@
     
     
     <entry>
-      <title>音乐</title>
-      <link href="/music/index.html"/>
-      <url>/music/index.html</url>
+      <title>link</title>
+      <link href="/link/index.html"/>
+      <url>/link/index.html</url>
       
         <content type="html"><![CDATA[]]></content>
       
@@ -178,6 +180,17 @@
       <title>tags</title>
       <link href="/tags/index.html"/>
       <url>/tags/index.html</url>
+      
+        <content type="html"><![CDATA[]]></content>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>音乐</title>
+      <link href="/music/index.html"/>
+      <url>/music/index.html</url>
       
         <content type="html"><![CDATA[]]></content>
       
